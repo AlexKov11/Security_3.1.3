@@ -36,7 +36,7 @@ public class UserService implements UserDetailsService, UserServ {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = findByUsername(username);
         if (user == null) {
@@ -51,6 +51,7 @@ public class UserService implements UserDetailsService, UserServ {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> getAllUsers() {
         return userRepo.findAll();
     }
@@ -70,6 +71,7 @@ public class UserService implements UserDetailsService, UserServ {
     }
 
     @Override
+    @Transactional
     public void createRolesIfNotExist() {
         if (roleRepo.findByName("ROLE_USER").isEmpty()) {
             roleRepo.save(new Role(1L, "ROLE_USER"));
@@ -96,15 +98,16 @@ public class UserService implements UserDetailsService, UserServ {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User showUser(Long id) {
         return userRepo.findById(id).orElseThrow(() ->
                 new UsernameNotFoundException(String.format("User with id = " + id + " not exist")));
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long id) {
         userRepo.deleteById(id);
     }
-
 
 }

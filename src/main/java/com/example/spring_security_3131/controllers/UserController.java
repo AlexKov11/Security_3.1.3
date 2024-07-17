@@ -2,7 +2,7 @@ package com.example.spring_security_3131.controllers;
 
 
 import com.example.spring_security_3131.entities.User;
-import com.example.spring_security_3131.service.UserService;
+import com.example.spring_security_3131.repositories.UserRepo;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,15 +12,15 @@ import java.security.Principal;
 
 @Controller
 public class UserController {
-    private UserService userService;
+    private final UserRepo userRepo;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserRepo userRepo) {
+        this.userRepo = userRepo;
     }
 
     @GetMapping("/user")
     public String showUser(Model model, Principal principal) {
-        User user = userService.findByUsername(principal.getName());
+        User user = userRepo.findByUsername(principal.getName());
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
